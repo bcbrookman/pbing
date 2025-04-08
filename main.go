@@ -12,7 +12,6 @@ import (
 
 var examples = `
 Examples:
-
     # ping google continuously
     ping www.google.com
 
@@ -36,6 +35,9 @@ Examples:
 
     # Send ICMP messages with DSCP CS4 and ECN bits set to 0
     ping -Q 128 8.8.8.8
+
+    # ping multiple hosts simultaneously
+    ping www.google.com gmail.com
 `
 
 func main() {
@@ -60,50 +62,55 @@ func main() {
 		return
 	}
 
-	host := flag.Arg(0)
-	pinger, err := probing.NewPinger(host)
-	if err != nil {
-		fmt.Println("ERROR:", err)
-		return
-	}
+	// host := flag.Arg(0)
+	hosts := flag.Args()
 
-	// listen for ctrl-C signal
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, os.Interrupt)
-	go func() {
-		for range c {
-			pinger.Stop()
+	for _, host := range hosts {
+
+		pinger, err := probing.NewPinger(host)
+		if err != nil {
+			fmt.Println("ERROR:", err)
+			return
 		}
-	}()
 
-	pinger.OnRecv = func(pkt *probing.Packet) {
-		fmt.Printf("%d bytes from %s: icmp_seq=%d time=%v ttl=%v\n",
-			pkt.Nbytes, pkt.IPAddr, pkt.Seq, pkt.Rtt, pkt.TTL)
-	}
-	pinger.OnDuplicateRecv = func(pkt *probing.Packet) {
-		fmt.Printf("%d bytes from %s: icmp_seq=%d time=%v ttl=%v (DUP!)\n",
-			pkt.Nbytes, pkt.IPAddr, pkt.Seq, pkt.Rtt, pkt.TTL)
-	}
-	pinger.OnFinish = func(stats *probing.Statistics) {
-		fmt.Printf("\n--- %s ping statistics ---\n", stats.Addr)
-		fmt.Printf("%d packets transmitted, %d packets received, %d duplicates, %v%% packet loss\n",
-			stats.PacketsSent, stats.PacketsRecv, stats.PacketsRecvDuplicates, stats.PacketLoss)
-		fmt.Printf("round-trip min/avg/max/stddev = %v/%v/%v/%v\n",
-			stats.MinRtt, stats.AvgRtt, stats.MaxRtt, stats.StdDevRtt)
-	}
+		// listen for ctrl-C signal
+		c := make(chan os.Signal, 1)
+		signal.Notify(c, os.Interrupt)
+		go func() {
+			for range c {
+				pinger.Stop()
+			}
+		}()
 
-	pinger.Count = *count
-	pinger.Size = *size
-	pinger.Interval = *interval
-	pinger.Timeout = *timeout
-	pinger.TTL = *ttl
-	pinger.InterfaceName = *iface
-	pinger.SetPrivileged(*privileged)
-	pinger.SetTrafficClass(uint8(*tclass))
+		pinger.OnRecv = func(pkt *probing.Packet) {
+			fmt.Printf("%s: %d bytes from %s: icmp_seq=%d time=%v ttl=%v\n",
+				time.Now().Format(time.DateTime), pkt.Nbytes, pkt.IPAddr, pkt.Seq, pkt.Rtt, pkt.TTL)
+		}
+		pinger.OnDuplicateRecv = func(pkt *probing.Packet) {
+			fmt.Printf("%s: %d bytes from %s: icmp_seq=%d time=%v ttl=%v (DUP!)\n",
+				time.Now().Format(time.DateTime), pkt.Nbytes, pkt.IPAddr, pkt.Seq, pkt.Rtt, pkt.TTL)
+		}
+		pinger.OnFinish = func(stats *probing.Statistics) {
+			fmt.Printf("\n--- %s ping statistics ---\n", stats.Addr)
+			fmt.Printf("%d packets transmitted, %d packets received, %d duplicates, %v%% packet loss\n",
+				stats.PacketsSent, stats.PacketsRecv, stats.PacketsRecvDuplicates, stats.PacketLoss)
+			fmt.Printf("round-trip min/avg/max/stddev = %v/%v/%v/%v\n",
+				stats.MinRtt, stats.AvgRtt, stats.MaxRtt, stats.StdDevRtt)
+		}
 
-	fmt.Printf("PING %s (%s):\n", pinger.Addr(), pinger.IPAddr())
-	err = pinger.Run()
-	if err != nil {
-		fmt.Println("Failed to ping target host:", err)
+		pinger.Count = *count
+		pinger.Size = *size
+		pinger.Interval = *interval
+		pinger.Timeout = *timeout
+		pinger.TTL = *ttl
+		pinger.InterfaceName = *iface
+		pinger.SetPrivileged(*privileged)
+		pinger.SetTrafficClass(uint8(*tclass))
+
+		fmt.Printf("PING %s (%s):\n", pinger.Addr(), pinger.IPAddr())
+		err = pinger.Run()
+		if err != nil {
+			fmt.Println("Failed to ping target host:", err)
+		}
 	}
 }
