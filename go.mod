@@ -1,4 +1,4 @@
-module github.com/bcbrookman/superping
+module github.com/bcbrookman/pbing
 
 go 1.23.7
 
