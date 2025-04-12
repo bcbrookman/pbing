@@ -1,0 +1,38 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - { uses: actions/checkout@v4 }
+      - { uses: actions/setup-go@v5, with: { go-version: 1.24.x } }
+
+      - name: Lint
+        uses: golangci/golangci-lint-action@v7
+        with:
+          version: v2.1.1
+
+  test-units:
+    runs-on: ubuntu-latest
+    steps:
+      - { uses: actions/checkout@v4 }
+      - { uses: actions/setup-go@v5, with: { go-version: 1.24.x } }
+
+      - name: Test Units
+        run: go test -v -cover ./...
+
+  test-build:
+      - { uses: actions/checkout@v4 }
+      - { uses: actions/setup-go@v5, with: { go-version: 1.24.x } }
+
+      - name: Test Builds
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          version: "~> v2.8"
+          args: build --snapshot --clean
