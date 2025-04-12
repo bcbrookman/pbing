@@ -61,6 +61,17 @@ func ColorizeRTT(stats *probing.Statistics, pktrtt time.Duration) string {
 	return result
 }
 
+func ColorizePacketDelta(interval time.Duration, delta time.Duration) string {
+	result := fmt.Sprintf("%0.1fs", delta.Seconds())
+
+	if delta >= interval*3 {
+		result = color.RedString(result)
+	} else if delta >= interval*2 {
+		result = color.YellowString(result)
+	}
+	return result
+}
+
 func main() {
 	timeout := flag.Duration("t", time.Second*100000, "")
 	interval := flag.Duration("i", time.Second, "")
@@ -108,15 +119,39 @@ func main() {
 		}
 	}()
 
+	var lastSuccessfulPacketTime time.Time
+
 	pinger.OnRecv = func(pkt *probing.Packet) {
+
+		currPacketTimeStamp := time.Now()
+		var timeSinceLastSuccessfulPacket time.Duration
+		if !lastSuccessfulPacketTime.IsZero() {
+			timeSinceLastSuccessfulPacket = currPacketTimeStamp.Sub(lastSuccessfulPacketTime)
+		}
+
 		stats := pinger.Statistics()
-		fmt.Printf("%s: %d bytes from %s: icmp_seq=%d time=%v ttl=%v\n",
-			time.Now().Format(time.DateTime), pkt.Nbytes, pkt.IPAddr, pkt.Seq, ColorizeRTT(stats, pkt.Rtt), pkt.TTL)
+
+		fmt.Printf("%s (\u0394%v): %d bytes from %s: icmp_seq=%d time=%v ttl=%v\n",
+			currPacketTimeStamp.Format(time.DateTime), ColorizePacketDelta(pinger.Interval, timeSinceLastSuccessfulPacket),
+			pkt.Nbytes, pkt.IPAddr, pkt.Seq, ColorizeRTT(stats, pkt.Rtt), pkt.TTL)
+
+		lastSuccessfulPacketTime = currPacketTimeStamp
 	}
 	pinger.OnDuplicateRecv = func(pkt *probing.Packet) {
+
+		currPacketTimeStamp := time.Now()
+		var timeSinceLastSuccessfulPacket time.Duration
+		if !lastSuccessfulPacketTime.IsZero() {
+			timeSinceLastSuccessfulPacket = currPacketTimeStamp.Sub(lastSuccessfulPacketTime)
+		}
+
 		stats := pinger.Statistics()
-		fmt.Printf("%s: %d bytes from %s: icmp_seq=%d time=%v ttl=%v (DUP!)\n",
-			time.Now().Format(time.DateTime), pkt.Nbytes, pkt.IPAddr, pkt.Seq, ColorizeRTT(stats, pkt.Rtt), pkt.TTL)
+
+		fmt.Printf("%v (\u0394%v): %d bytes from %s: icmp_seq=%d time=%v ttl=%v (DUP!)\n",
+			currPacketTimeStamp.Format(time.DateTime), ColorizePacketDelta(pinger.Interval, timeSinceLastSuccessfulPacket),
+			pkt.Nbytes, pkt.IPAddr, pkt.Seq, ColorizeRTT(stats, pkt.Rtt), pkt.TTL)
+
+		lastSuccessfulPacketTime = currPacketTimeStamp
 	}
 	pinger.OnFinish = func(stats *probing.Statistics) {
 		fmt.Printf("\n--- %s ping statistics ---\n", stats.Addr)
