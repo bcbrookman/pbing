@@ -51,9 +51,17 @@ func main() {
 	privileged := flag.Bool("privileged", false, "")
 	flag.Usage = func() {
 		out := flag.CommandLine.Output()
-		fmt.Fprintf(out, "Usage of %s:\n", os.Args[0])
+		_, err := fmt.Fprintf(out, "Usage of %s:\n", os.Args[0])
+		if err != nil {
+			fmt.Println("ERROR:", err)
+			return
+		}
 		flag.PrintDefaults()
-		fmt.Fprint(out, examples)
+		_, err = fmt.Fprint(out, examples)
+		if err != nil {
+			fmt.Println("ERROR:", err)
+			return
+		}
 	}
 	flag.Parse()
 
