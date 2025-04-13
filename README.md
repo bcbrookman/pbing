@@ -10,17 +10,13 @@ An enhanced ping utility written in Go using the [prometheus-community/pro-bing]
 
 ## Quickstart
 
-1. Download a binary from [releases](https://github.com/bcbrookman/pbing/releases/) that matches your OS and arch.
-2. Rename and move the downloaded binary to a location in your PATH.
-
-   For example, on most Linux systems:
+1. Install using Go
 
    ```shell
-   sudo mv ~/Downloads/pbing_* /usr/local/bin/pbing
-   sudo chmod +x /usr/local/bin/pbing
+   go install github.com/bcbrookman/pbing@latest
    ```
 
-3. Run `pbing` like you would `ping`.
+2. Run `pbing` like you would `ping`.
 
    ```shell
    $ pbing github.com
@@ -42,4 +38,16 @@ An enhanced ping utility written in Go using the [prometheus-community/pro-bing]
    --- github.com ping statistics ---
    13 packets transmitted, 13 packets received, 0 duplicates, 0% packet loss
    round-trip min/avg/max/stddev = 39.466592ms/42.030695ms/43.59449ms/1.244149ms
+   ```
+
+## Manual Install
+
+1. Download a binary from [releases](https://github.com/bcbrookman/pbing/releases/) that matches your OS and arch.
+2. Move the downloaded binary to a location in your PATH.
+
+   For example, on most Linux systems:
+
+   ```shell
+   sudo mv ~/Downloads/pbing_* /usr/local/bin/pbing
+   sudo chmod +x /usr/local/bin/pbing
    ```
