@@ -1,0 +1,63 @@
+version: '3'
+
+run: once
+
+tasks:
+  default:
+    cmds:
+      - cmd: task --list
+        ignore_error: true
+        silent: true
+
+  install:goreleaser:
+    cmds:
+      - go install github.com/goreleaser/goreleaser/v2@latest
+    status:
+      - go version -m $(which goreleaser) | grep "mod\sgithub.com/goreleaser/goreleaser/v2\sv2"
+  
+  install:golangci-lint:
+    cmds:
+      - go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.1.1
+    status:
+      - go version -m $(which golangci-lint) | grep "mod\sgithub.com/golangci/golangci-lint/v2\sv2.1.1"
+
+  install:go-mod-deps:
+    cmds:
+      - go mod download
+
+  test:lint:
+    deps:
+      - install:golangci-lint
+    cmds:
+      - golangci-lint run ./...
+
+  test:units:
+    deps:
+      - install:go-mod-deps
+    cmds:
+      - go test -v -cover ./...
+
+  test:static:
+    desc: Run ONLY static tests
+    aliases:
+      - static
+    cmds:
+      - task: test:lint
+      - task: test:units
+
+  test:builds:
+    desc: Run ONLY local test builds
+    aliases:
+      - build
+    deps:
+      - install:goreleaser
+    cmds:
+      - goreleaser build --snapshot --clean
+
+  test:all:
+    desc: Run ALL tests
+    aliases:
+      - test
+    cmds:
+      - task: test:static
+      - task: test:builds
