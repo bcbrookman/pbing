@@ -7,14 +7,15 @@
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	"features": {
-		"ghcr.io/audacioustux/devcontainers/taskfile:1": {}
-	}
+		"ghcr.io/audacioustux/devcontainers/taskfile:1": {},
+		"ghcr.io/devcontainers-extra/features/pre-commit:2": {}
+	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "go version",
+	"postCreateCommand": "pre-commit install"
 
 	// Configure tool-specific properties.
 	// "customizations": {},
