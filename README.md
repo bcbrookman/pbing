@@ -18,7 +18,7 @@ Installation requires the following general steps:
 
 You can install the latest version using the **Quickstart** commands below.
 
-<details>
+<details open>
 <summary><strong>Linux Quickstart</strong></summary>
 
 Run the following in a terminal:
@@ -32,7 +32,7 @@ pbing -h
 
 </details>
 
-<details>
+<details open>
 <summary><strong>Windows Quickstart</strong></summary>
 
 Run the following in PowerShell as an Administrator:
