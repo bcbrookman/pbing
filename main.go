@@ -11,34 +11,29 @@ import (
 	probing "github.com/prometheus-community/pro-bing"
 )
 
-var examples = `
+const helpUsage string = `
+Usage:
+  pbing [options] <destination>
+`
+
+const helpOptions string = `
+Options:
+  <destination>
+        dns name or ip address to ping
+  -h, -help
+        print this help message
+`
+
+const helpExamples string = `
 Examples:
-    # ping google continuously
-    ping www.google.com
-
-    # ping google 5 times
-    ping -c 5 www.google.com
-
-    # ping google 5 times at 500ms intervals
-    ping -c 5 -i 500ms www.google.com
-
-    # ping google for 10 seconds
-    ping -t 10s www.google.com
-
-    # ping google specified interface
-    ping -I eth1 www.google.com
-
-    # Send a privileged raw ICMP ping
-    sudo ping --privileged www.google.com
-
-    # Send ICMP messages with a 100-byte payload
-    ping -s 100 1.1.1.1
-
-    # Send ICMP messages with DSCP CS4 and ECN bits set to 0
-    ping -Q 128 8.8.8.8
-
-    # ping multiple hosts simultaneously
-    ping www.google.com gmail.com
+  pbing example.com                    # ping continuously
+  pbing -c 5 example.com               # ping 5 times
+  pbing -c 5 -i 500ms example.com      # ping 5 times at 500ms intervals
+  pbing -T 10s example.com             # ping for 10 seconds
+  pbing -I eth0 example.com            # ping from a specific interface
+  sudo pbing -privileged example.com   # ping using raw ICMP pings
+  pbing -s 100 example.com             # ping with 100-byte payloads
+  pbing -Q 128 example.com             # ping with DSCP CS4 and ECN 0
 `
 
 func ColorizeRTT(stats *probing.Statistics, pktrtt time.Duration) string {
@@ -73,40 +68,38 @@ func ColorizePacketDelta(interval time.Duration, delta time.Duration) string {
 }
 
 func main() {
-	timeout := flag.Duration("t", time.Second*100000, "")
-	interval := flag.Duration("i", time.Second, "")
-	count := flag.Int("c", -1, "")
-	size := flag.Int("s", 24, "")
-	ttl := flag.Int("l", 64, "TTL")
-	iface := flag.String("I", "", "interface name")
-	tclass := flag.Int("Q", 192, "Set Quality of Service related bits in ICMP datagrams (DSCP + ECN bits). Only decimal number supported")
-	privileged := flag.Bool("privileged", false, "")
+	iface := flag.String("I", "", "`interface` name to source pings from")
+	tclass := flag.Int("Q", 192, "QoS `tclass` (DSCP + ECN bits) as a decimal number")
+	timeout := flag.Duration("T", time.Second*100000, "maximum `time` to ping before exiting")
+	count := flag.Int("c", -1, "maximum `count` of pings before exiting")
+	ttl := flag.Int("t", 64, "time to live (`TTL`) value")
+	interval := flag.Duration("i", time.Second, "time `interval` between pings")
+	privileged := flag.Bool("privileged", false, "enable privileged mode to send raw ICMP rather than UDP")
+	size := flag.Int("s", 24, "payload `size` in bytes")
 	flag.Usage = func() {
 		out := flag.CommandLine.Output()
-		_, err := fmt.Fprintf(out, "Usage of %s:\n", os.Args[0])
+		_, err := fmt.Fprint(out, helpUsage)
 		if err != nil {
 			fmt.Println("ERROR:", err)
-			return
+		}
+		_, err = fmt.Fprint(out, helpOptions)
+		if err != nil {
+			fmt.Println("ERROR:", err)
 		}
 		flag.PrintDefaults()
-		_, err = fmt.Fprint(out, examples)
+		_, err = fmt.Fprint(out, helpExamples, "\n")
 		if err != nil {
 			fmt.Println("ERROR:", err)
-			return
 		}
 	}
 	flag.Parse()
-
-	if flag.NArg() == 0 {
-		flag.Usage()
-		return
-	}
 
 	host := flag.Arg(0)
 
 	pinger, err := probing.NewPinger(host)
 	if err != nil {
 		fmt.Println("ERROR:", err)
+		fmt.Println("See 'pbing -h' for usage")
 		return
 	}
 
