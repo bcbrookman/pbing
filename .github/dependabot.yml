@@ -10,3 +10,15 @@ updates:
    directory: "/"
    schedule:
      interval: weekly
+   assignees: [ "bcbrookman" ]
+   commit-message:
+     prefix: "chore"
+     include: "scope"
+ - package-ecosystem: "gomod"
+   directory: "/"
+   schedule:
+     interval: weekly
+   assignees: [ "bcbrookman" ]
+   commit-message:
+     prefix: "chore"
+     include: "scope"
