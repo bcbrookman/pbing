@@ -6,27 +6,30 @@
 
 version: 2
 updates:
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: github-actions
+    directory: /
     schedule:
-      interval: "weekly"
-   assignees: [ "bcbrookman" ]
-   commit-message:
-     prefix: "build"
-     include: "scope"
- - package-ecosystem: "devcontainers"
-   directory: "/"
-   schedule:
-     interval: weekly
-   assignees: [ "bcbrookman" ]
-   commit-message:
-     prefix: "chore"
-     include: "scope"
- - package-ecosystem: "gomod"
-   directory: "/"
-   schedule:
-     interval: weekly
-   assignees: [ "bcbrookman" ]
-   commit-message:
-     prefix: "chore"
-     include: "scope"
+      interval: weekly
+    assignees:
+      - bcbrookman
+    commit-message:
+      prefix: build
+      include: scope
+  - package-ecosystem: devcontainers
+    directory: /
+    schedule:
+      interval: weekly
+    assignees:
+      - bcbrookman
+    commit-message:
+      prefix: chore
+      include: scope
+  - package-ecosystem: gomod
+    directory: /
+    schedule:
+      interval: weekly
+    assignees:
+      - bcbrookman
+    commit-message:
+      prefix: chore
+      include: scope
