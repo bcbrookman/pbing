@@ -39,9 +39,11 @@ Run the following in PowerShell as an Administrator:
 
 ```powershell
 New-Item -Path "$env:ProgramFiles\pbing" -ItemType Directory -Force
+$arch = [Environment]::GetEnvironmentVariable("PROCESSOR_ARCHITECTURE", [EnvironmentVariableTarget]::Machine)
+switch ($arch) { "ARM64" { $arch = "arm64"  } default { $arch = "x86_64" } }
 Invoke-WebRequest `
-   -Uri "https://github.com/bcbrookman/pbing/releases/latest/download/pbing_Windows_x86_64.exe" `
-   -OutFile "$env:ProgramFiles\pbing\pbing.exe"
+  -Uri "https://github.com/bcbrookman/pbing/releases/latest/download/pbing_Windows_$arch.exe" `
+  -OutFile "$env:ProgramFiles\pbing\pbing.exe"
 [Environment]::SetEnvironmentVariable("Path", $env:Path + ";$env:ProgramFiles\pbing", [EnvironmentVariableTarget]::Machine)
 pbing -h
 ```
