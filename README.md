@@ -50,7 +50,7 @@ pbing -h
 
 > [!IMPORTANT]
 > - On **Linux**, it may be necessary to set `sysctl -w net.ipv4.ping_group_range="0 2147483647"` to allow "unprivileged" pings via UDP.
-> - On **Windows**, you must **ALWAYS** use `-privileged`, and accessing TTL values is not supported due to low-level package limitations.
+> - On **Windows**, `-privileged` is required and enabled by default. Accessing TTL values is also not supported due to low-level package limitations.
 > - MacOS is not officially supported.
 > - For more information, see [pro-bing's supported operating systems](https://github.com/prometheus-community/pro-bing?tab=readme-ov-file#supported-operating-systems).
 
@@ -94,7 +94,7 @@ Examples:
   pbing -c 5 -i 500ms example.com      # ping 5 times at 500ms intervals
   pbing -T 10s example.com             # ping for 10 seconds
   pbing -I eth0 example.com            # ping from a specific interface
-  sudo pbing -privileged example.com   # ping using raw ICMP pings
+  pbing -privileged example.com        # ping using raw ICMP pings
   pbing -s 100 example.com             # ping with 100-byte payloads
   pbing -Q 128 example.com             # ping with DSCP CS4 and ECN 0
 
