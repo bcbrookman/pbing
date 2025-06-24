@@ -45,9 +45,10 @@ changelog:
   sort: asc
   filters:
     exclude:
-      - "^build:"
-      - "^docs:"
-      - "^test:"
+      - "^(build)(\(*.*\))?!*:"
+      - "^(docs)(\(*.*\))?!*:"
+      - "^(test)(\(*.*\))?!*:"
+      - "^(style)(\(*.*\))?!*:"
 
 release:
   footer: >-
