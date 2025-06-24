@@ -58,43 +58,45 @@ pbing -h
 
 Use `pbing` as you would `ping`.
 
-```shell
+```text
 $ pbing -h
 
 Usage:
-   pbing [options] <destination>
+  pbing [options] <destination>
 
 Options:
-   <destination>
-         dns name or ip address to ping
-   -h, -help
-         print this help message
-   -I interface
-         interface name to source pings from
-   -Q tclass
-         QoS tclass (DSCP + ECN bits) as a decimal number (default 192)
-   -T time
-         maximum time to ping before exiting (default 27h46m40s)
-   -c count
-         maximum count of pings before exiting (default -1)
-   -i interval
-         time interval between pings (default 1s)
-   -privileged
-         enable privileged mode to send raw ICMP rather than UDP
-   -s size
-         payload size in bytes (default 24)
-   -t TTL
-         time to live (TTL) value (default 64)
+  <destination>
+        dns name or ip address to ping
+  -h, -help
+        print this help message
+  -I interface
+        interface name to source pings from
+  -Q tclass
+        QoS tclass (DSCP + ECN bits) as a decimal number (default 192)
+  -T time
+        maximum time to ping before exiting (default 27h46m40s)
+  -V version
+        print version and exit
+  -c count
+        maximum count of pings before exiting (default -1)
+  -i interval
+        time interval between pings (default 1s)
+  -privileged
+        enable privileged mode to send raw ICMP rather than UDP
+  -s size
+        payload size in bytes (default 24)
+  -t TTL
+        time to live (TTL) value (default 64)
 
 Examples:
-   pbing example.com                    # ping continuously
-   pbing -c 5 example.com               # ping 5 times
-   pbing -c 5 -i 500ms example.com      # ping 5 times at 500ms intervals
-   pbing -T 10s example.com             # ping for 10 seconds
-   pbing -I eth0 example.com            # ping from a specific interface
-   sudo pbing -privileged example.com   # ping using raw ICMP pings
-   pbing -s 100 example.com             # ping with 100-byte payloads
-   pbing -Q 128 example.com             # ping with DSCP CS4 and ECN 0
+  pbing example.com                    # ping continuously
+  pbing -c 5 example.com               # ping 5 times
+  pbing -c 5 -i 500ms example.com      # ping 5 times at 500ms intervals
+  pbing -T 10s example.com             # ping for 10 seconds
+  pbing -I eth0 example.com            # ping from a specific interface
+  sudo pbing -privileged example.com   # ping using raw ICMP pings
+  pbing -s 100 example.com             # ping with 100-byte payloads
+  pbing -Q 128 example.com             # ping with DSCP CS4 and ECN 0
 
 $ pbing github.com
 PING github.com (X.X.X.X):

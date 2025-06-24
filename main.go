@@ -36,6 +36,8 @@ Examples:
   pbing -Q 128 example.com             # ping with DSCP CS4 and ECN 0
 `
 
+var Version = "development"
+
 func ColorizeRTT(stats *probing.Statistics, pktrtt time.Duration) string {
 	// calculate difference of average RTT and current packet RTT
 	avgRttDiff := time.Duration(stats.AvgRtt - pktrtt)
@@ -76,6 +78,7 @@ func main() {
 	interval := flag.Duration("i", time.Second, "time `interval` between pings")
 	privileged := flag.Bool("privileged", false, "enable privileged mode to send raw ICMP rather than UDP")
 	size := flag.Int("s", 24, "payload `size` in bytes")
+	version := flag.Bool("V", false, "print `version` and exit")
 	flag.Usage = func() {
 		out := flag.CommandLine.Output()
 		_, err := fmt.Fprint(out, helpUsage)
@@ -93,6 +96,11 @@ func main() {
 		}
 	}
 	flag.Parse()
+
+	if *version {
+		fmt.Println("pbing", Version)
+		os.Exit(0)
+	}
 
 	host := flag.Arg(0)
 
