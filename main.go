@@ -31,7 +31,7 @@ Examples:
   pbing -c 5 -i 500ms example.com      # ping 5 times at 500ms intervals
   pbing -T 10s example.com             # ping for 10 seconds
   pbing -I eth0 example.com            # ping from a specific interface
-  sudo pbing -privileged example.com   # ping using raw ICMP pings
+  pbing -privileged example.com        # ping using raw ICMP pings
   pbing -s 100 example.com             # ping with 100-byte payloads
   pbing -Q 128 example.com             # ping with DSCP CS4 and ECN 0
 `
@@ -76,7 +76,7 @@ func main() {
 	count := flag.Int("c", -1, "maximum `count` of pings before exiting")
 	ttl := flag.Int("t", 64, "time to live (`TTL`) value")
 	interval := flag.Duration("i", time.Second, "time `interval` between pings")
-	privileged := flag.Bool("privileged", false, "enable privileged mode to send raw ICMP rather than UDP")
+	privileged := flag.Bool("privileged", defaultPrivileged, "enable privileged mode to send raw ICMP rather than UDP")
 	size := flag.Int("s", 24, "payload `size` in bytes")
 	version := flag.Bool("V", false, "print `version` and exit")
 	flag.Usage = func() {
