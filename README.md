@@ -53,7 +53,7 @@ pbing -h
 > [!IMPORTANT]
 > - On **Linux**, it may be necessary to set `sysctl -w net.ipv4.ping_group_range="0 2147483647"` to allow "unprivileged" pings via UDP.
 > - On **Windows**, `-privileged` is required and enabled by default. Accessing TTL values is also not supported due to low-level package limitations.
-> - MacOS is not officially supported.
+> - MacOS is not officially supported by the pro-bing library.
 > - For more information, see [pro-bing's supported operating systems](https://github.com/prometheus-community/pro-bing?tab=readme-ov-file#supported-operating-systems).
 
 ## Usage
