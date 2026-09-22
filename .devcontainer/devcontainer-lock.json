@@ -1,0 +1,14 @@
+{
+  "features": {
+    "ghcr.io/audacioustux/devcontainers/taskfile:1.0.1": {
+      "version": "1.0.1",
+      "resolved": "ghcr.io/audacioustux/devcontainers/taskfile@sha256:c7650e10b0a4b97037e3ecdf1d59878f0158cb50957298d5bdde5b61210fb7ba",
+      "integrity": "sha256:c7650e10b0a4b97037e3ecdf1d59878f0158cb50957298d5bdde5b61210fb7ba"
+    },
+    "ghcr.io/devcontainers-extra/features/pre-commit:2.0.18": {
+      "version": "2.0.18",
+      "resolved": "ghcr.io/devcontainers-extra/features/pre-commit@sha256:6e0bb2ce80caca1d94f44dab5d0653d88a1c00984e590adb7c6bce012d0ade6e",
+      "integrity": "sha256:6e0bb2ce80caca1d94f44dab5d0653d88a1c00984e590adb7c6bce012d0ade6e"
+    }
+  }
+}
