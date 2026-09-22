@@ -3,12 +3,12 @@
 {
 	"name": "Go",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/go:1-1.24-bookworm",
+	"image": "mcr.microsoft.com/devcontainers/go:1.24-bookworm@sha256:2fe929afae562b8c50a28052aa6bc772e8045578fcc7b0508bb6da8935da3fb1",
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	"features": {
-		"ghcr.io/audacioustux/devcontainers/taskfile:1": {},
-		"ghcr.io/devcontainers-extra/features/pre-commit:2": {}
+		"ghcr.io/audacioustux/devcontainers/taskfile:1.0.1": {},
+		"ghcr.io/devcontainers-extra/features/pre-commit:2.0.18": {}
 	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
